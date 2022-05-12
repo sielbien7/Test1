@@ -6,9 +6,8 @@ import datetime
 from pathlib import Path
 from datetime import date
 
-def getDate():
-    hoy= date.today()
-    meses= {
+#Variables
+meses= {
         1:"enero",
         2:"febrero",
         3:"marzo",
@@ -22,8 +21,25 @@ def getDate():
         11:"noviembre",
         12:"diciembre"
     }
-    fecha = [str(hoy.day),meses[hoy.month],str(hoy.year)]
-    return fecha
+#Clases
+class fecha:
+    def __init__(self):
+        self.dia = date.today().day
+        self.mes = date.today().month
+        self.mesNombre = meses[date.today().month]
+        self.anio = date.today().year
+
+#Funciones
+def getDate():
+    hoy = fecha()
+    return hoy
+
+def crearRuta(ruta):
+    try:
+        os.makedirs(ruta)
+        print("La ruta:", ruta, " fue creada correctamente ")
+    except FileExistsError:
+        pass
 
 def getCategoria (urlArchivo):
     categoria ='Vacio'
@@ -40,13 +56,14 @@ def getArchivo (urlArchivo):
     if categoria == 'Vacio':
         print('Categoria no encontrada, revisar URL')
     else:
-        fileName= 'M:/Documents/2022/pythonProjects/ProyectoCool'+categoria+'/'+fecha[2]+'-'+fecha[1]+'/'+categoria+'-'+fecha[0]+'-'+fecha[1]+'-'+fecha[2]+'.csv'
-        fileNameFormato= Path(fileName)
+        ruta='M:/Documents/2022/pythonProjects/ProyectoCool/Data/'+categoria+'/'+str(fecha.anio)+'-'+fecha.mesNombre
+        fileName= 'M:/Documents/2022/pythonProjects/ProyectoCool/Data/'+categoria+'/'+str(fecha.anio)+'-'+fecha.mesNombre+'/'+categoria+'-'+str(fecha.dia)+'-'+str(fecha.mes)+'-'+str(fecha.anio)+'.csv'
+        crearRuta(ruta)
 
         if r.status_code == 404:
             print("Error 404, URL Invalida")
         else:
-            with open(fileNameFormato, 'wb') as f:
+            with open(fileName, 'wb') as f:
                 f.write(r.content)
             print("Archivo guardado")
 
