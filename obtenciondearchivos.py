@@ -1,5 +1,4 @@
-#Testooo
-import importsProyexto
+from imports import *
 
 #Variables
 meses= {
@@ -17,48 +16,53 @@ meses= {
         12:"diciembre"
     }
 #Clases
-class fecha:
+class Fecha:
+    """objetos fecha"""
     def __init__(self):
         self.dia = date.today().day
         self.mes = date.today().month
-        self.mesNombre = meses[date.today().month]
+        self.mes_nombre = meses[date.today().month]
         self.anio = date.today().year
 
 #Funciones
-def getDate():
+def get_date():
+    """devuelve fecha de hoy"""
     hoy = fecha()
     return hoy
 
-def crearRuta(ruta):
+def crear_ruta(ruta):
+    """crea la ruta especificada"""
     try:
         os.makedirs(ruta)
         print("La ruta:", ruta, " fue creada correctamente ")
-    except FileExistsError:
+    except FileExistsError:#ignora error si exista la ruta
         pass
 
-def getCategoria (urlArchivo):
+def get_categoria (url_archivo):
+    """devuelve categoria de la url pasada"""
     categoria ='Vacio'
     nombres = ['museos', 'salas-de-cine', 'bibliotecas-populares']
     for i in range(len(nombres)):
-        if urlArchivo.rfind(nombres[i]) != -1:
+        if url_archivo.rfind(nombres[i]) != -1:
             categoria=nombres[i]
     return categoria
 
-def getArchivo (urlArchivo):
-    r=requests.get(urlArchivo)
-    categoria=getCategoria(urlArchivo)
-    fecha=getDate()
+def get_archivo (url_archivo):
+    """guarda el archivo en la ruta correspondiente y conel nombre correspondiente"""
+    r=requests.get(url_archivo)
+    categoria=get_categoria(url_archivo)
+    fecha=get_date()
     if categoria == 'Vacio':
         print('Categoria no encontrada, revisar URL')
     else:
         ruta='M:/Documents/2022/pythonProjects/ProyectoCool/Data/'+categoria+'/'+str(fecha.anio)+'-'+fecha.mesNombre
-        fileName= 'M:/Documents/2022/pythonProjects/ProyectoCool/Data/'+categoria+'/'+str(fecha.anio)+'-'+fecha.mesNombre+'/'+categoria+'-'+str(fecha.dia)+'-'+str(fecha.mes)+'-'+str(fecha.anio)+'.csv'
-        crearRuta(ruta)
+        file_name= 'M:/Documents/2022/pythonProjects/ProyectoCool/Data/'+categoria+'/'+str(fecha.anio)+'-'+fecha.mes_nombre+'/'+categoria+'-'+str(fecha.dia)+'-'+str(fecha.mes)+'-'+str(fecha.anio)+'.csv'
+        crear_ruta(ruta)
 
         if r.status_code == 404:
             print("Error 404, URL Invalida")
         else:
-            with open(fileName, 'wb') as f:
+            with open(file_name, 'wb') as f:
                 f.write(r.content)
             print("Archivo guardado")
 
