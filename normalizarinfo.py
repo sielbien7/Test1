@@ -1,8 +1,14 @@
-from imports import *
+import requests
+import sys
+import os
+import datetime
+from pathlib import Path
+from datetime import date
+import glob
 import csv
+import pandas as pd
+from obtenciondearchivos import *
 
-#funcion que elija archivo con la fecha mas reciente
-#clase con atributos de cada tabla para legibilidad
 
 #Variables
 header_list = [
@@ -10,12 +16,28 @@ header_list = [
         'categoria', 'provincia', 'localidad', 'nombre', 'domicilio',
         'codigo postal', 'numero de telefono', 'mail', 'web'
     ]
-#Clases
+header_viejo_museos=[ #header original del archivo museos
+    'Cod_Loc','IdProvincia','IdDepartamento','subcategoria',
+    'provincia','localidad','nombre','direccion',
+    'CP','telefono','Mail','Web'
+]
+header_viejo_cines=[
+#header original del archivo cines
+'Cod_Loc','IdProvincia','IdDepartamento','Categoría',
+    'Provincia','Localidad','Nombre','Dirección',
+    'CP','Teléfono','Mail','Web'
+]
+header_viejo_bibliotecas=[
+#header original del archivo bibliotecas
+'Cod_Loc','IdProvincia','IdDepartamento','Categoría',
+    'Provincia','Localidad','Nombre','Domicilio',
+    'CP','Teléfono','Mail','Web'
+]
 
 #Funciones
 def get_latest_month (categoria):
     """obtiene mes mas reciente de la carpeta"""
-    path = "M:/Documents/2022/pythonProjects/ProyectoCool/Data/"+categoria
+    path = "Data/"+categoria+"/"
     mes=''
     dir_list = os.listdir(path)
     all_folders = ''
@@ -37,11 +59,19 @@ def get_latest_file(categoria):
 
 def crear_tabla_normalizada():
     """funcion que crea la tabla que contendrá la información normalizada"""
-    ruta='M:/Documents/2022/pythonProjects/ProyectoCool/datanormalizada/tabla-normalizada.csv'
+    ruta='/datanormalizada/tabla-normalizada.csv'
 
-    with open('M:/Documents/2022/pythonProjects/ProyectoCool/datanormalizada/tabla-normalizada.csv','w') as tabla_normalizada:
+    with open('datanormalizada/tabla-normalizada.csv','w') as tabla_normalizada:
         dw=csv.DictWriter(tabla_normalizada,delimiter=',',fieldnames=header_list)
         dw.writeheader()
+
+def append_info_normalizada(ruta_ultimo_archivo,header):
+    df = pd.read_csv(ruta_ultimo_archivo)
+    # guarda valores de la tabla museos de las columnas que se encuentran en header_viejo_museos
+    nuevas_columnas = df[header]
+    # guarda los valores de las columnas seleccionadas en nueva tabla con headers correspondientes
+    tabla_normalizada = nuevas_columnas.to_csv("datanormalizada/tabla-normalizada.csv", mode='a', header=False)
+
 
 
 

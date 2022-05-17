@@ -4,11 +4,14 @@ import os
 import datetime
 from pathlib import Path
 from datetime import date
-from obtenciondearchivos import *
 import glob
-from normalizarinfo import *
 import csv
 import pandas as pd
+
+from obtenciondearchivos import *
+from normalizarinfo import *
+
+
 
 
 

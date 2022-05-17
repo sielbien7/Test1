@@ -1,4 +1,12 @@
-from imports import *
+import requests
+import sys
+import os
+import datetime
+from pathlib import Path
+from datetime import date
+import glob
+import csv
+import pandas as pd
 
 #Variables
 meses= {
@@ -24,10 +32,10 @@ class Fecha:
         self.mes_nombre = meses[date.today().month]
         self.anio = date.today().year
 
-#Funciones
+#Funciones que usa la funcion get_archivo
 def get_date():
     """devuelve fecha de hoy"""
-    hoy = fecha()
+    hoy = Fecha()
     return hoy
 
 def crear_ruta(ruta):
@@ -41,11 +49,14 @@ def crear_ruta(ruta):
 def get_categoria (url_archivo):
     """devuelve categoria de la url pasada"""
     categoria ='Vacio'
-    nombres = ['museos', 'salas-de-cine', 'bibliotecas-populares']
+    nombres = ['museos', 'cine', 'biblioteca']
+    nombres_formato = ['museos', 'salas-de-cine', 'bibliotecas-populares']
     for i in range(len(nombres)):
         if url_archivo.rfind(nombres[i]) != -1:
-            categoria=nombres[i]
+            categoria=nombres_formato[i]
     return categoria
+
+#Funcion principal
 
 def get_archivo (url_archivo):
     """guarda el archivo en la ruta correspondiente y conel nombre correspondiente"""
@@ -55,8 +66,8 @@ def get_archivo (url_archivo):
     if categoria == 'Vacio':
         print('Categoria no encontrada, revisar URL')
     else:
-        ruta='M:/Documents/2022/pythonProjects/ProyectoCool/Data/'+categoria+'/'+str(fecha.anio)+'-'+fecha.mesNombre
-        file_name= 'M:/Documents/2022/pythonProjects/ProyectoCool/Data/'+categoria+'/'+str(fecha.anio)+'-'+fecha.mes_nombre+'/'+categoria+'-'+str(fecha.dia)+'-'+str(fecha.mes)+'-'+str(fecha.anio)+'.csv'
+        ruta='Data/'+categoria+'/'+str(fecha.anio)+'-'+fecha.mes_nombre
+        file_name= 'Data/'+categoria+'/'+str(fecha.anio)+'-'+fecha.mes_nombre+'/'+categoria+'-'+str(fecha.dia)+'-'+str(fecha.mes)+'-'+str(fecha.anio)+'.csv'
         crear_ruta(ruta)
 
         if r.status_code == 404:
