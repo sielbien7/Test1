@@ -9,6 +9,7 @@ import csv
 import pandas as pd
 from obtenciondearchivos import *
 from normalizarinfo import *
+from procesamientodata import *
 
 
 
@@ -32,18 +33,34 @@ urlbiblio="https://datos.cultura.gob.ar/dataset/37305de4-3cce-4d4b-9d9a-fec3ca61
 #get_archivo(urlbiblio)
 
 #crear_rutas_proyecto()
-creartabla_normalizada()
+#creartabla_normalizada()
 
 
-append_info_normalizada(get_latest_file("museos"),header_viejo_museos)
+#append_info_normalizada(get_latest_file("museos"),header_viejo_museos)
 #append_info_normalizada(get_latest_file("salas-de-cine"),header_viejo_cines)
 #append_info_normalizada(get_latest_file("bibliotecas-populares"),header_viejo_bibliotecas)
 
 
 
+#def llenartabla():
+"""funcion que procesa la info de la tabla cines"""
+df_origen= pd.read_csv(get_latest_file("salas-de-cine"))
+#df_destino=pd.read_csv(destino)
+df_temp= pd.DataFrame
+df_origen.sort_values(by=['IdProvincia'])
+idprov=2
+pantallas=0
 
+while idprov<=94:
+    df_temp = df_origen.loc[df_origen.IdProvincia == idprov]
+    #resetear contadores
+    for index in df_temp.index:
+        pantallas+=df_temp['Pantallas'][index]
 
+    #appendear contador de pantallas y el resto de contadores a la tabla procesada
+    idprov+=4
 
+print(pantallas)
 
 
 
