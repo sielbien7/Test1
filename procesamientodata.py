@@ -56,32 +56,32 @@ def procesar_datos_cines():
     """funcion que procesa la info de la tabla cines"""
     df_origen = pd.read_csv(get_latest_file("salas-de-cine"))
     df_destino = pd.read_csv('dataprocesada/info-cines-procesada.csv')
-    df_temp = pd.DataFrame
-    df_origen.sort_values(by=['IdProvincia'])
+    df_temp = pd.DataFrame #dataframe temporal
+    df_origen.sort_values(by=['IdProvincia']) #ordena tabla por id de provincia
     idprov = 2
     pantallas = 0
     butacas = 0
     espacios_INCAA = 0
-    index_append = 0
+    index_append = 0 #index provincias
     while idprov <= 94:
-        df_temp = df_origen.loc[df_origen.IdProvincia == idprov]
-        df_temp = df_temp.astype({"espacio_INCAA": str})
+        df_temp = df_origen.loc[df_origen.IdProvincia == idprov] #crea tabla temporal con filas de una provincia a la vez
+        df_temp = df_temp.astype({"espacio_INCAA": str}) #pone el tipo de dato de la columna espacio_INCAA como string
         pantallas = 0
         butacas = 0
         espacios_INCAA = 0
         for index in df_temp.index:
             pantallas += df_temp['Pantallas'][index]
             butacas += df_temp['Butacas'][index]
-            if (df_temp['espacio_INCAA'][index].lower()) == 'si':
+            if (df_temp['espacio_INCAA'][index].lower()) == 'si': #pasa valor de la columna a minuscula para poder compararlo
                 espacios_INCAA += 1
 
         df_destino.at[index_append, 'cantidad de pantallas'] = pantallas
         df_destino.at[index_append, 'cantidad de butacas'] = butacas
-        df_destino.at[index_append, 'cantidad de espacios INCAA'] = espacios_INCAA
+        df_destino.at[index_append, 'cantidad de espacios INCAA'] = espacios_INCAA #guarda valores de contadores en tabla de destino
         index_append += 1
         idprov += 4
 
-        df_destino.to_csv('dataprocesada/info-cines-procesada.csv', header=True, index=False
+        df_destino.to_csv('dataprocesada/info-cines-procesada.csv', header=True, index=False)
 
 
 
