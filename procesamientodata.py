@@ -52,6 +52,37 @@ def creartabla_procesamiento_cines ():
         df.to_csv("dataprocesada/info-cines-procesada.csv",mode='a', header=True,index=False)
 
 
+def procesar_datos_cines():
+    """funcion que procesa la info de la tabla cines"""
+    df_origen = pd.read_csv(get_latest_file("salas-de-cine"))
+    df_destino = pd.read_csv('dataprocesada/info-cines-procesada.csv')
+    df_temp = pd.DataFrame
+    df_origen.sort_values(by=['IdProvincia'])
+    idprov = 2
+    pantallas = 0
+    butacas = 0
+    espacios_INCAA = 0
+    index_append = 0
+    while idprov <= 94:
+        df_temp = df_origen.loc[df_origen.IdProvincia == idprov]
+        df_temp = df_temp.astype({"espacio_INCAA": str})
+        pantallas = 0
+        butacas = 0
+        espacios_INCAA = 0
+        for index in df_temp.index:
+            pantallas += df_temp['Pantallas'][index]
+            butacas += df_temp['Butacas'][index]
+            if (df_temp['espacio_INCAA'][index].lower()) == 'si':
+                espacios_INCAA += 1
+
+        df_destino.at[index_append, 'cantidad de pantallas'] = pantallas
+        df_destino.at[index_append, 'cantidad de butacas'] = butacas
+        df_destino.at[index_append, 'cantidad de espacios INCAA'] = espacios_INCAA
+        index_append += 1
+        idprov += 4
+
+        df_destino.to_csv('dataprocesada/info-cines-procesada.csv', header=True, index=False
+
 
 
 

@@ -91,3 +91,5 @@ def append_info_normalizada(ruta_ultimo_archivo,header):
 
 
 
+
+
